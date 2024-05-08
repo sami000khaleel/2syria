@@ -1,0 +1,30 @@
+const mongoose = require('mongoose')
+const userSchema=new mongoose.Schema({
+    email:{
+    type:String,
+    required:true
+}
+    ,userName:{
+        type:String,
+        required:true
+    },
+    password:{
+        required:true,
+        type:String
+    },
+    accountVerificationCodes:[{
+        verificationCode:Number,
+        date:{
+            type:Date,
+            default:Date.now()
+        }
+        ,checked:{
+            type:Boolean,
+            required:true,
+            default:false
+        }
+    }]
+    ,
+    placesReviewed:[{date:{type:Date,default:Date.now()},place:{type:mongoose.SchemaTypes.ObjectId,ref:'Place'},}]
+})
+module.exports=mongoose.model('User',userSchema)

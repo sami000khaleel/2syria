@@ -1,0 +1,32 @@
+{
+  "name": "2syria",
+  "version": "1.0.0",
+  "description": "server code to a tourists guide website in syria",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sami khalil",
+  "license": "ISC",
+  "dependencies": {
+    "api": "^6.1.1",
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "google-auth-library": "^9.2.0",
+    "gyp": "^0.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.9.2",
+    "node-gyp": "^9.4.0",
+    "node-pre-gyp": "^0.17.0",
+    "nodemailer": "^6.9.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

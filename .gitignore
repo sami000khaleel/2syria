@@ -1,0 +1,16 @@
+NODE_MODULES
+.env
+places-images
+data
+scripts
+files
+*.keras
+*.pkl
+a.py
+files
+.csv
+.py
+.ipynb
+uploads
+.jpg
+.ipynb
