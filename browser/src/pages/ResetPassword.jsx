@@ -15,7 +15,7 @@ const ResetPassword = () => {
         await api.resetPassword(password)
         setLoadingFlag(false) 
         window.alert('password has been changed successfully')
-        navigate('/')
+        navigate('/map')
     } catch (err) {
         console.log(err)
         setLoadingFlag(false)

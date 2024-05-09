@@ -40,7 +40,7 @@ class placeController {
         const filePath = req.file.path;
         console.log("File saved at:", filePath);
         let similarities = await placeMiddleware.sendImage(filePath, res);
-        if(!similarities.length)
+        if(!similarities?.length)
           return res.status(500).json({success:false,message:'no similarities were found'})
 
         const results = await placeMiddleware.matchPlacesByImagesNames(similarities);
@@ -170,10 +170,7 @@ class placeController {
   }
   static async get_places(req, res) {
     try {
-      const { radius, unit, userLng, userLat, type, city } = req.query;
-      let query = {};
-      if (type) query = { ...query, type };
-      if (city) query = { ...query, city };
+      const { radius, unit, userLng, userLat  } = req.query;
       if (!radius)
         return res.json({ success: false, message: "radius was not given" });
       if (unit != "mi" && unit != "km")
@@ -181,7 +178,7 @@ class placeController {
           success: false,
           message: "not a supported unit or format",
         });
-      let places = await Place.find(query);
+      let places = await Place.find();
 
       if (!places.length)
         return res.json({

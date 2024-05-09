@@ -19,7 +19,7 @@ const Login = () => {
       console.log(data)
       setUser(data.user);
       Cookies.setItem("token", data.token);
-      navigate('/')
+      navigate('/map')
     } catch (err ) {
       console.log(err)
       setError({ message: err.response.data.message, status: err.response.status });

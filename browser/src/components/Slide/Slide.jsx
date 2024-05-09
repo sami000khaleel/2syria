@@ -145,7 +145,7 @@ const Slide = ({
   }
   useEffect(() => {
     const fetchImages = async () => {
-      const imagePromises = place.photos.map(async (photo) => {
+      const imagePromises = place?.photos.map(async (photo) => {
         return await api.getImage(place.place_id, photo.photo_reference);
       });
       const blobs = await Promise.all(imagePromises);

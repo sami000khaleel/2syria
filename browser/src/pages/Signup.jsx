@@ -25,7 +25,7 @@ const Signup = () => {
       const { data } = await api.signup(user);
       Cookies.setItem("token", data.token);
       setUser(data.user);
-      navigate("/");
+      navigate("/map");
     } catch (err) {
       console.log( err );
       setError({ message: err.response.data.message, status: err.response.status });

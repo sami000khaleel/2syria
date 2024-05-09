@@ -54,6 +54,7 @@ class placeMiddleware {
       });
   
       console.log(process.env.SIMILARITY_URL);
+      return response.data.similarities
     } catch (err) {
       console.error(err); // Log the error for debugging purposes
       return res.status(500).json({ success: false, message: 'Error communicating with the server' });

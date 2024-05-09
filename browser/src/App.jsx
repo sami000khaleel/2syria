@@ -6,8 +6,7 @@ const App = () => {
   const location=useLocation()
   const navigate=useNavigate()
  
-  const [mapFlag,setMapFlag]=useState(false)
-  useEffect(()=>Cookies.getItem('token')?navigate('/map'):()=>null,[location.pathname])
+  useEffect(()=>navigate('/map'),[])
   return (<>
  <Outlet />
   </>
