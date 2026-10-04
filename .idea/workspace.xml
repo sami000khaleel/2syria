@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d60eb6ae-bb8d-4d8b-9668-25dbaf5a44c2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/browser/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/browser/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/browser/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/api/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/api/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/components/SearchForm/SearchForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/components/SearchForm/SearchForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/browser/src/pages/Map.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/browser/src/pages/Map.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/.ipynb_checkpoints/Untitled-checkpoint.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/.ipynb_checkpoints/a-checkpoint.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/.ipynb_checkpoints/hate-checkpoint.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/.ipynb_checkpoints/userQuery-checkpoint.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715026232729.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715030527773.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715030538278.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032033374.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032070995.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032270011.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032324558.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032359214.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032412247.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032418175.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715032648687.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033029016.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033302290.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033307885.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033313821.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033319041.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715033351070.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715155951663.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156019448.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156083635.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156121790.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156244606.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156406195.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156434637.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156445529.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156450310.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156455932.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156602830.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156624549.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715156660772.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249629168.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249719859.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249743351.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249768044.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249807034.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249859161.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249964756.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249973587.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/images/1715249980828.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/server.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/similarities.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask-server/similarities.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/models/placeModel.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/models/placeModel.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="3KF0uJ1zCFWpKKuRQOH53AUPsJa" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d60eb6ae-bb8d-4d8b-9668-25dbaf5a44c2" name="Changes" comment="" />
+      <created>1791138267393</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1791138267393</updated>
+    </task>
+    <servers />
+  </component>
+</project>

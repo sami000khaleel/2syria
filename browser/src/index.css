@@ -64,3 +64,7 @@
     animation-duration: 2s;
     animation-timing-function: linear;
   }
+  *{
+    text-transform:capitalize;
+  }
+  

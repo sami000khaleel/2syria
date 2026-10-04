@@ -132,9 +132,9 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
               visibleFilter ? "" : "hidden"
             } min-w-[400px] p-3 flex absolute z-10 bg-white shadow-2xl  justify-between  top-10  right-[50%] translate-x-[50%] `}
           >
-            <article className="flex flex-col justify-between items-center">
+            <article className=" border-r-4 border-r-slate-400 flex flex-col justify-between items-center">
               <h1 className="bold text-xl">CITIES</h1>
-              <ul className=" flex items-center   gap-1 justify-start  flex-col flex-wrap h-[400px] ">
+              <ul className=" mr-3 flex items-center   gap-1 justify-start  flex-col flex-wrap h-[400px] ">
                 {cities.map((city, i) => (
                   
                     <li
@@ -147,7 +147,7 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
                 ))}
               </ul>
             </article>
-            <div className=" rounded-xl mx-3 my-3 bg-slate-700 w-1  z-30"></div>
+            {/* <div className=" rounded-xl mx-3 my-3 bg-slate-700 w-1  z-30"></div> */}
             <article className="" id="place type">
               <h1 className="bold text-xl">TYPES</h1>
               <ul className="flex flex-col " >

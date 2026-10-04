@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const User=require('../models/userModel.js')
 const axios = require('axios');
 const Place=require('../models/placeModel.js');
-const userMiddleware=require('../middleware/userMiddleware')
-const placeMiddleware = require('../middleware/placeMiddleware');
+const userMiddleware=require('../middleware/userMiddleware.js')
+const placeMiddleware = require('../middleware/placeMiddleware.js');
 const {OAuth2Client, auth}=require('google-auth-library');
 const authenticationMiddleware = require('../middleware/authentication.js');
 class userController{

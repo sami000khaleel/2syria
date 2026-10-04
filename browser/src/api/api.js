@@ -21,7 +21,7 @@ export default class api {
     formData.append("file", image);
     const response = await axios.post(
       `${api.url}/place/search-by-image`,
-      formData ,
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -29,7 +29,7 @@ export default class api {
         },
       }
     );
-    return response
+    return response;
   }
   static async getReveiws(placeId) {
     const { data } = await axios.get(

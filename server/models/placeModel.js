@@ -27,6 +27,7 @@ const placeSchema=new mongoose.Schema({
         review:String
     }],
     description:String,
+    suitableForBadWeather:{type:Boolean,default:true,required:true},
     type:{type:String,required:true}
 })
 module.exports=mongoose.model('Place',placeSchema)
