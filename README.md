@@ -8,7 +8,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
 [![Flask](https://img.shields.io/badge/Flask-AI%20Service-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
 
-📹 **[Demo Video](#)**
+📹 **[Demo Video](https://onedrive.live.com/?qt=allmyphotos&photosData=%2Fshare%2FCA524006C0AC4FC8%21s633ef9c6cbcb45d499fd12013e605811%3Fithint%3Dvideo%26migratedtospo%3Dtrue&cid=CA524006C0AC4FC8&id=CA524006C0AC4FC8%21s633ef9c6cbcb45d499fd12013e605811&redeem=aHR0cHM6Ly8xZHJ2Lm1zL3YvYy9jYTUyNDAwNmMwYWM0ZmM4L0VjYjVQbVBMeTlSRm1mMFNBVDVnV0JFQjMyd3VtZFg2YV9hUEdJMUNlMy1qNXc&v=photos)**
 
 ---
 
