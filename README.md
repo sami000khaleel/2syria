@@ -190,14 +190,17 @@ browser/
 
 ## 📸 Screenshots
 
-> Screenshots and a live demo video will be added soon.
+### Home & Map View
+![Home and Map View](docs/screenshot-home.png)
 
-```
-docs/
-├── screenshot-map.png
-├── screenshot-search.png
-└── screenshot-place.png
-```
+### Image Search Result
+![Image Search Result](docs/screenshot-search.png)
+
+### Place Details & Reviews
+![Place Details and Reviews](docs/screenshot-place.png)
+
+### Authentication
+![Signup and Login](docs/screenshot-auth.png)
 
 ---
 
@@ -228,8 +231,9 @@ docs/
 
 ## 👨‍💻 About Me
 
-I'm **Sami Khaleel**, a full-stack developer based in Jülich, Germany, with a B.Eng in Computer Engineering.
+I'm **Sami Khaleel**, a full-stack developer based in Germany, with a B.Eng in Computer Engineering.
 
+I built 2Syria to combine my love for my country's history with my interest in AI and modern web development. It's one of three major portfolio projects I've built while transitioning into professional software engineering in Germany.
 
 I'm currently looking for a **Junior Full-Stack Developer** role and I'm available immediately — already in Germany, no visa sponsorship needed.
 
