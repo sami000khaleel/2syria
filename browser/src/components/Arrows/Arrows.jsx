@@ -1,49 +1,24 @@
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Arrows = ({scrollLeft,scrollRight}) => {
     return (
-        <span id='scroll-images' className=' flex space-x-5 absolute bottom-2 right-1/2 translate-x-1/2 z-80'>
-           <button  onClick={scrollLeft}
- >
+        <span id='scroll-images' className='flex items-center gap-1.5'>
+           <button
+             onClick={scrollLeft}
+             aria-label="previous place"
+             className="grid h-9 w-9 cursor-pointer place-content-center rounded-full border border-sand-200 bg-white text-ink-700 transition hover:border-brand-500 hover:bg-brand-500 hover:text-white active:scale-95 dark:border-ink-700 dark:bg-ink-850 dark:text-ink-100 dark:hover:border-brand-400 dark:hover:bg-brand-400 dark:hover:text-ink-950"
+           >
+             <ChevronLeft size={20} strokeWidth={2.5} />
+           </button>
 
-            <svg 
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                height="50"
-                viewBox="0 0 24 24"
-                fill="none"
-                color='white'
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather cursor-pointer feather-arrow-left hover:bg-[#9C6FE4] rounded-3xl"
-                >
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            </button>
-                
-            <button onClick={scrollRight} >
-
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                color='white'
-                height="50"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="feather cursor-pointer feather-arrow-left hover:bg-[#9C6FE4] rounded-3xl"
-                
+            <button
+              onClick={scrollRight}
+              aria-label="next place"
+              className="grid h-9 w-9 cursor-pointer place-content-center rounded-full border border-sand-200 bg-white text-ink-700 transition hover:border-brand-500 hover:bg-brand-500 hover:text-white active:scale-95 dark:border-ink-700 dark:bg-ink-850 dark:text-ink-100 dark:hover:border-brand-400 dark:hover:bg-brand-400 dark:hover:text-ink-950"
             >
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-                </button>
+              <ChevronRight size={20} strokeWidth={2.5} />
+            </button>
         </span>
     );
 };

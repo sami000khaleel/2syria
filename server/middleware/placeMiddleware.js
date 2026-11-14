@@ -1,7 +1,6 @@
 const Place = require("../models/placeModel.js");
 const FormData = require("form-data");
-const fs = require('fs');
-const path = require('path');
+const multer = require('multer');
 const axios = require('axios');
 class placeMiddleware {
   constructor() {}
@@ -32,35 +31,65 @@ class placeMiddleware {
     console.log(places.length)
     return places;
   }
-  static async sendImage(filePath, res) {
+  // multer with memory storage: the image stays in RAM (req.file.buffer), never on disk
+  static receiveImageInMemory(req, res) {
+    const upload = multer({
+      storage: multer.memoryStorage(),
+      limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype && file.mimetype.startsWith("image/")) return cb(null, true);
+        cb(new Error("only image files are allowed"));
+      },
+    }).single("file");
+    return new Promise((resolve, reject) => {
+      upload(req, res, (err) => {
+        if (!err) return resolve();
+        if (err.code === "LIMIT_FILE_SIZE") return reject(new Error("the image is too large (max 10 MB)"));
+        reject(err);
+      });
+    });
+  }
+
+  // Forwards the in-memory image to the AI service.
+  // Throws an error with `aiUnavailable = true` when the service can't be reached or fails.
+  static async sendImage(file) {
+    const aiUnavailable = (message) => {
+      const err = new Error(message);
+      err.aiUnavailable = true;
+      return err;
+    };
+
+    if (!process.env.SIMILARITY_URL) throw aiUnavailable("SIMILARITY_URL is not set");
+
+    const formData = new FormData();
+    formData.append("file", file.buffer, {
+      filename: file.originalname || "upload.jpg",
+      contentType: file.mimetype || "image/jpeg",
+      knownLength: file.size,
+    });
+
     try {
-      if (!fs.existsSync(filePath)) {
-        console.log('file does not exist');
-        throw new Error('File does not exist');
-      }
-  
-      if (fs.existsSync(path.join(filePath))) {
-        console.log('file does exist');
-      }
-      const formData = new FormData();
-      formData.append("file", fs.createReadStream(filePath));
-      console.log({ ...formData.getHeaders() });
-  
       const response = await axios.post(process.env.SIMILARITY_URL, formData, {
         headers: {
           ...formData.getHeaders(),
           Authorization: `Bearer ${process.env.SERVER_TOKEN}`,
         },
+        timeout: Number(process.env.AI_TIMEOUT_MS) || 60000,
+        maxBodyLength: Infinity,
       });
-  
-      console.log(process.env.SIMILARITY_URL);
-      return response.data.similarities
+      return response.data?.similarities || [];
     } catch (err) {
-      console.error(err); // Log the error for debugging purposes
-      return res.status(500).json({ success: false, message: 'Error communicating with the server' });
+      // no response (down / sleeping / DNS / timeout) or a 5xx from the AI server
+      const status = err.response?.status;
+      if (!err.response || status >= 500 || status === 401 || status === 422)
+        throw aiUnavailable(`${err.code || status || ""} ${err.message}`.trim());
+      // 4xx from the AI server means it rejected this particular image
+      const e = new Error("the AI service could not process this image, please try another one");
+      e.aiRejected = true;
+      throw e;
     }
   }
-  
+
     static async  checkIfWeekIsPassed(user, place) {
   console.log(place.reviews)
   const lastReview = place.reviews.find(review => review.userId.toString() === user._id.toString());

@@ -1,0 +1,14 @@
+{
+  "name": "2syria",
+  "private": true,
+  "description": "2Syria - React frontend served by the Express server",
+  "scripts": {
+    "build": "npm install --prefix browser --include=dev && npm run build --prefix browser && npm install --prefix server --omit=dev",
+    "start": "npm start --prefix server",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix browser"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

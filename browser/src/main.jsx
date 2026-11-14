@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import PageNotFound from "./pages/PageNotFound ";
 import "./index.css";
-import RecoverAccount from "./pages/recoverAccount";
+import RecoverAccount from "./pages/RecoverAccount";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Map from "./pages/Map";

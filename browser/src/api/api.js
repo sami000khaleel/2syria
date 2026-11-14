@@ -2,7 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookies";
 
 export default class api {
-  static url = "http://127.0.0.1:3000/api";
+  // Same origin in production (the server serves this app). Override with VITE_API_URL if needed.
+  static url = import.meta.env.VITE_API_URL || "/api";
   static token = Cookies.getItem("token");
   static async resetPassword(password) {
     const { data } = await axios.patch(
@@ -59,10 +60,14 @@ export default class api {
     return data;
   }
   static async getUserLocation() {
-    const res = await axios.get("https://api.ipify.org?format=json");
-    const { data } = await axios.get("http://ip-api.com/json/" + res.data.ip);
-    const userLocation = [data.lat, data.lon];
-    return userLocation;
+    // HTTPS providers only (plain http is blocked on an https site)
+    try {
+      const { data } = await axios.get("https://get.geojs.io/v1/ip/geo.json");
+      return [Number(data.latitude), Number(data.longitude)];
+    } catch (err) {
+      const { data } = await axios.get("https://ipapi.co/json/");
+      return [Number(data.latitude), Number(data.longitude)];
+    }
   }
   static async signup({ userName, email, password }) {
     return await axios.post(`${api.url}/user/signup`, {
@@ -152,8 +157,15 @@ export default class api {
     return data.results;
   }
 
+  // Direct URL for an <img>. The server redirects it to R2 in production.
+  static imageUrl(placeId, photoReference) {
+    return `${api.url}/place/image?photoReference=${encodeURIComponent(
+      photoReference
+    )}&placeId=${encodeURIComponent(placeId)}`;
+  }
+
   static async getImage(placeId, photoReference) {
-    const url = `http://127.0.0.1:3000/api/place/image?photoReference=${photoReference}&placeId=${placeId}`;
+    const url = `${api.url}/place/image?photoReference=${photoReference}&placeId=${placeId}`;
     const res = await axios.get(url, {
       responseType: "blob",
       headers: {

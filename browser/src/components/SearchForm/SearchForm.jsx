@@ -3,6 +3,7 @@ import Searchcon from "../svgs/SearchIcon";
 import api from "../../api/api";
 import RangeSlide from "../RangeSlide/RangeSlide";
 import { useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
 const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setSelectedPlace,setSlideFlage,userLocation}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleFilter, setVisibleFilter] = useState(false);
@@ -108,12 +109,12 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
 
   return (
     <>
-      <form className=" text-black  max-w-[600px]  absolute z-10 rounded-xl  flex justify-center items-center bg-white   top-4 left-1/2  transform -translate-x-1/2 scale-75   ">
-        <div className="flex justify-between items-center w-full mx-4 ">
+      <form className="absolute left-1/2 top-4 z-10 w-[calc(100vw-2rem)] -translate-x-1/2 text-ink-900 dark:text-ink-50 sm:left-[max(50%,calc(416px+15rem))] sm:top-5 sm:z-30 sm:w-[30rem]">
+        <div className="glass flex w-full animate-drop-in items-center gap-1 rounded-2xl p-1.5 pl-4 transition-shadow duration-300 focus-within:shadow-2xl focus-within:shadow-brand-500/20">
           <input
             onChange={handleInput}
             placeholder="search 2syria"
-            className="  outline-none rounded-lg  text-left h-100"
+            className="min-w-0 flex-1 bg-transparent py-2.5 text-[15px] text-left outline-none placeholder:text-ink-400"
             type="text"
             name="search"
             id="search"
@@ -122,24 +123,29 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
           <button
             id="filter"
             onClick={handleFilterClick}
-            className="relative bg-slate-100 rounded-md p-1 cursor-pointer"
+            className={`relative inline-flex cursor-pointer items-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              visibleFilter
+                ? "bg-brand-500/10 text-brand-600 dark:bg-brand-400/[.15] dark:text-brand-300"
+                : "text-ink-500 hover:bg-ink-900/5 hover:text-ink-900 dark:text-ink-300 dark:hover:bg-white/5 dark:hover:text-white"
+            }`}
           >
+            <SlidersHorizontal size={16} aria-hidden />
             filter
           </button>
           <section
             id="list"
             className={`${
               visibleFilter ? "" : "hidden"
-            } min-w-[400px] p-3 flex absolute z-10 bg-white shadow-2xl  justify-between  top-10  right-[50%] translate-x-[50%] `}
+            } glass !bg-white/95 dark:!bg-ink-900/95 nice-scroll absolute left-1/2 top-[calc(100%+10px)] z-10 grid max-h-[72vh] w-[min(calc(100vw-2rem),600px)] -translate-x-1/2 origin-top animate-scale-in gap-6 overflow-y-auto rounded-2xl p-5 sm:grid-cols-[1.4fr_1fr]`}
           >
-            <article className=" border-r-4 border-r-slate-400 flex flex-col justify-between items-center">
-              <h1 className="bold text-xl">CITIES</h1>
-              <ul className=" mr-3 flex items-center   gap-1 justify-start  flex-col flex-wrap h-[400px] ">
+            <article className="flex flex-col gap-3 sm:border-r sm:border-sand-200 sm:pr-6 sm:dark:border-ink-700">
+              <h1 className="section-label">CITIES</h1>
+              <ul className="stagger-fast flex flex-wrap gap-2">
                 {cities.map((city, i) => (
                   
                     <li
                       onClick={(e) => handleSelectCity(e, city)}
-                      className="text-lg cursor-pointer my-4 p-1 rounded-lg bg-slate-200 data-[selected]:bg-green-400  "
+                      className="chip"
                       key={i}
                     >
                       {city}
@@ -148,14 +154,14 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
               </ul>
             </article>
             {/* <div className=" rounded-xl mx-3 my-3 bg-slate-700 w-1  z-30"></div> */}
-            <article className="" id="place type">
-              <h1 className="bold text-xl">TYPES</h1>
-              <ul className="flex flex-col " >
+            <article className="flex flex-col gap-3" id="place type">
+              <h1 className="section-label">TYPES</h1>
+              <ul className="stagger-fast flex flex-wrap gap-2" >
                 {types.map((type,i) => (
                   
                     <li
                       onClick={(e) => handleSelectType(e, type)}
-                      className="cursor-pointer text-lg text-center flex   data-[selected]:bg-green-400  bg-slate-200 p-1 my-2 rounded-lg"
+                      className="chip"
                       key={i}
                     >
                       {type}
@@ -166,7 +172,11 @@ const SearchForm = ({ showErrorDialog,getUserLocation,setPlaces, setCenter ,setS
             <RangeSlide  getUserLocation={getUserLocation} userLocation={userLocation} radiusFlage={radiusFlage} setRadiusFlage={setRadiusFlage} radius={radius} setRadius={setRadius} unit={unit} setUnit={setUnit}/>
             </article>
           </section>
-          <button onClick={handleSearch}>
+          <button
+            onClick={handleSearch}
+            aria-label="search"
+            className="grid h-11 w-11 shrink-0 place-content-center rounded-xl bg-brand-500 text-white shadow-md shadow-brand-500/30 transition hover:bg-brand-600 active:scale-95 dark:bg-brand-400 dark:text-ink-950 dark:hover:bg-brand-300"
+          >
             <Searchcon />
           </button>
         </div>

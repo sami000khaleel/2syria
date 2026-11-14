@@ -1,0 +1,71 @@
+/* Slide.css */
+
+/* Define styles for stars */
+.star {
+  color: var(--star-empty); /* Default color for empty stars */
+  line-height: 1;
+}
+
+.full-star {
+  color: var(--star-full); /* Color for full stars */
+  text-shadow: 0 1px 6px rgba(245, 179, 1, 0.35);
+}
+
+.half-star {
+  display: inline-block;
+  position: relative;
+  font-size: inherit;
+  color: transparent; /* Make the star transparent */
+}
+
+.half-star:before {
+  content: '\2605'; /* Unicode character for a star */
+  position: absolute;
+  left: 0;
+  background-image: linear-gradient(to right, var(--star-full) 50%, var(--star-empty) 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.empty-star {
+  color: var(--star-empty); /* Color for empty stars */
+}
+
+/* the clickable stars in the review form */
+.rating-star-button {
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.rating-star-button:hover {
+  transform: scale(1.18);
+}
+
+#comments {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) transparent;
+}
+#comments::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+#comments::-webkit-scrollbar-track {
+  background: transparent; /* Color of the track */
+}
+
+#comments::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb); /* Color of the thumb */
+  border-radius: 999px; /* Rounded corners */
+}
+
+#comments::-webkit-scrollbar-thumb:hover {
+  background-color: #2496e6; /* Brand colour on hover */
+}
+
+/* a star pops when it lights up */
+.rating-star-button.full-star {
+  animation: star-pop 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes star-pop {
+  0% { scale: 0.7; }
+  60% { scale: 1.25; }
+  100% { scale: 1; }
+}

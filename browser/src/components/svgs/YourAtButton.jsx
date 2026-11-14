@@ -1,13 +1,13 @@
 import React from 'react'
-import At from '../../assets/svgs/nearby.svg'
+import { LocateFixed } from 'lucide-react'
 const YourAtButton = ({userLocation,setUserLocation,setCenter,getUserLocation}) => {
 async function handleClick(){
   if(!userLocation.length){
     let res= await getUserLocation()
-      if(res.length)  
+      if(res.length)
     setCenter(res)
     return
-  
+
     }
     console.log('location is in')
     setCenter([userLocation[0]+0.001,userLocation[1]+0.0001])
@@ -15,9 +15,13 @@ async function handleClick(){
   }
   return (
     <>
-    <button onClick={handleClick} className='w-[70px] hover:text-white shadow-sm  z-30 rounded-full'>
-    <img src={At} alt="SVG Image" className='p-1'/>
-
+    <button
+      onClick={handleClick}
+      aria-label="go to my location"
+      title="my location"
+      className='icon-btn h-14 w-14 text-brand-600 dark:text-brand-300'
+    >
+      <LocateFixed size={24} strokeWidth={2.25} />
     </button>
     </>
     )

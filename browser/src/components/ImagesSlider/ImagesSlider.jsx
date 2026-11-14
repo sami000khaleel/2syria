@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import LeftArrow from '../../assets/svgs/LeftArrow' 
 import RightArrow from "../../assets/svgs/RightArrow";
-import { ArrowBigLeft, ArrowBigRight,CircleDot,Circle } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import fallbackImage from "../../assets/syrianFlagNew.svg";
 import './imageSilder.css'
 const ImagesSlider = ({ imagesUrls }) => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -22,7 +23,7 @@ const ImagesSlider = ({ imagesUrls }) => {
     });
   }
   return (
-    <span className="relative w-full h-full" id="container">
+    <span className="relative block w-full h-full" id="container">
       <div className="flex w-full h-full overflow-hidden">
         {imagesUrls.map(imageUrl => 
           <img
@@ -31,9 +32,15 @@ const ImagesSlider = ({ imagesUrls }) => {
           }}
           key={imageUrl}
             
-            className={` trasition duration-300 ease-in-out shrink-0 grow-0  object-cover block h-full w-full`}
+            className={`transition-[translate] duration-500 ease-out shrink-0 grow-0  object-cover block h-full w-full`}
             src={imageUrl}
-            alt="product image"
+            loading="lazy"
+            onError={(e) => {
+              // missing photo -> show the flag instead of a broken image
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = fallbackImage;
+            }}
+            alt="place photo"
           />
         )}
 
@@ -41,32 +48,32 @@ const ImagesSlider = ({ imagesUrls }) => {
         id='image-slider'
         aria-label="view next image"
           onClick={showPreviousImage}
-          className="z-30 squich hover:bg-[rgba(0,0,0,0.2)] focus-visible:bg-[rgba(0,0,0,0.2)] w-[2rem] b-0 h-full  flex justify-center items-center  absolute top-1/2   -translate-y-1/2 left-0"
+          className="z-30 group w-14 h-full flex justify-center items-center absolute top-1/2 -translate-y-1/2 left-0 bg-gradient-to-r from-black/25 to-transparent opacity-80 transition hover:opacity-100 focus-visible:opacity-100"
         >
-          <span className="rounded-full bg-black h-7 aspect-square flex justify-center items-center">
-            <ArrowBigLeft  aria-hidden fill="black" stroke="white" size={60} />
+          <span className="rounded-full bg-white/90 text-ink-900 shadow-lg backdrop-blur h-9 aspect-square flex justify-center items-center transition group-hover:bg-white">
+            <ChevronLeft aria-hidden size={22} strokeWidth={2.5} />
           </span>
         </button>
         <button
           aria-label="view previous image"
           id='image-slider'
           onClick={showNextImage}
-          className="z-30 hover:bg-[rgba(0,0,0,0.2)] focus-visible:bg-[rgba(0,0,0,0.2)] w-[2rem] b-0 h-full  flex justify-center  items-center  absolute top-1/2   -translate-y-1/2 right-0"
+          className="z-30 group w-14 h-full flex justify-center items-center absolute top-1/2 -translate-y-1/2 right-0 bg-gradient-to-l from-black/25 to-transparent opacity-80 transition hover:opacity-100 focus-visible:opacity-100"
         >
-          <span className="rounded-full bg-black h-7 aspect-square flex justify-center items-center">
-            <ArrowBigRight aria-hidden fill="black" stroke="white" size={40} />
+          <span className="rounded-full bg-white/90 text-ink-900 shadow-lg backdrop-blur h-9 aspect-square flex justify-center items-center transition group-hover:bg-white">
+            <ChevronRight aria-hidden size={22} strokeWidth={2.5} />
           </span>
         </button>
       </div>
-      <div className="absolute bottom-2 left-1/2  -translate-x-1/2  flex gap-1">
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 rounded-full bg-black/30 px-2 py-1.5 backdrop-blur-sm">
         {imagesUrls.map((_,index)=>(
           <button 
             aria-label={`view image number ${index+1}`}
-          className="w-4 h-4  transition  duration-100 ease-in-out focus-visible:scale-110 hover:scale-110 " onClick={e=>{
+          className="flex h-2 items-center transition duration-100 ease-in-out focus-visible:scale-110 hover:scale-110" onClick={e=>{
             e.preventDefault()
             e.stopPropagation()
             setImageIndex(index)
-          }} key={index}>{index===imageIndex?<CircleDot aria-hidden height='100%' width='100%' stroke="white" fill="black" />:<Circle aria-hidden stroke="white" fill="black" height='100%' width='100%' />}</button>
+          }} key={index}>{index===imageIndex?<span aria-hidden className="block h-2 w-5 rounded-full bg-white transition-all" />:<span aria-hidden className="block h-2 w-2 rounded-full bg-white/[.55] transition-all" />}</button>
         ))}
       </div>
     </span>

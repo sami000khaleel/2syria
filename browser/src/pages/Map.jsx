@@ -13,7 +13,9 @@ import "leaflet/dist/leaflet.css";
 import api from "../api/api";
 import Loading from "../components/Loading/Loading";
 import Nearby from "../components/svgs/Nearby";
-import { ImageDown } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
+import ImageSearch from "../components/ImageSearch/ImageSearch";
+import ThemeToggle from "../components/ThemeToggle/ThemeToggle";
 import Slide from "../components/Slide/Slide";
 import SearchForm from "../components/SearchForm/SearchForm";
 import Cookies from "js-cookies";
@@ -162,7 +164,12 @@ const Map = () => {
       return (
         <>
           <Circle
-            pathOptions={{ color: "red" }}
+            pathOptions={{
+              color: "#2496E6",
+              fillColor: "#59B8F7",
+              fillOpacity: 0.18,
+              weight: 2,
+            }}
             center={userLocation}
             radius={100}
           />
@@ -199,7 +206,7 @@ const Map = () => {
             position={[place.location.lat, place.location.lng]}
           >
             <Circle
-              pathOptions={{ color: "red" }}
+              pathOptions={{ color: "#CE1126", fillOpacity: 0.15, weight: 2 }}
               center={center}
               radius={50}
             />
@@ -247,30 +254,43 @@ const Map = () => {
     } catch (err) {
       console.log(err);
       settLoadingFlag(false);
+      showErrorDialog({
+        errorFlage: true,
+        message:
+          err?.response?.data?.message ||
+          "the AI image search service is not available right now, please try again later",
+        status: err?.response?.status || 503,
+      });
     }
   }
   return (
-    <main className="relative ">
+    <main className="relative h-[100dvh] w-full overflow-hidden bg-sand-100 dark:bg-ink-950">
       {
         <dialog
           ref={dialogRef}
-          className={`z-50 backdrop-opacity-60 backdrop-filter backdrop-blur-lg fixed top-0 left-0  flex justify-center items-center
-  ${error.errorFlage ? "dialog-open" : "dialog-closed"}`}
+          className={`fixed inset-x-0 top-24 z-[60] mx-auto block w-[min(92vw,420px)] border-0 bg-transparent p-0
+  ${error.errorFlage ? "dialog-open animate-dialog" : "dialog-closed pointer-events-none"}`}
         >
           {error.errorFlage ? (
             <div
-              className={`bg-black rounded-lg border border-red-600 shadow-lg p-6 relative`}
+              className={`glass relative flex items-start gap-3 rounded-2xl border-l-4 !border-l-star-500 p-4 pr-11`}
             >
-              <h2 className="text-lg font-semibold text-white">Error</h2>
-              <p className="text-bold text-red-600">{error.message}</p>
+              <span className="mt-0.5 grid h-9 w-9 shrink-0 animate-shake place-content-center rounded-full bg-star-500/10 text-star-500 dark:bg-star-500/20 dark:text-star-400">
+                <AlertCircle size={20} />
+              </span>
+              <div>
+                <h2 className="text-base font-bold text-ink-900 dark:text-white">Error</h2>
+                <p className="mt-0.5 text-sm text-ink-500 dark:text-ink-300">{error.message}</p>
+              </div>
               <button
-                className="absolute top-2 right-2 text-white hover:text-gray-300"
+                aria-label="close"
+                className="absolute right-2 top-2 grid h-8 w-8 place-content-center rounded-full text-ink-400 transition hover:bg-ink-900/5 hover:text-ink-900 dark:hover:bg-white/10 dark:hover:text-white"
                 onClick={() => {
                   setError((pre) => ({ ...pre, errorFlage: false }));
                   clearTimeout(timeoutId);
                 }}
               >
-                &times;
+                <X size={18} />
               </button>
             </div>
           ) : null}
@@ -288,27 +308,15 @@ const Map = () => {
           place={places[placeIndex]}
         />
       )}
-      <div className="absolute flex flex-col items-center  justify-center top-[500px] sm:right-10 right-0 z-50  ">
+      <div className={`absolute bottom-8 right-4 z-50 fab-in flex-col items-end gap-3 sm:bottom-10 sm:right-8 ${slideFlage ? "hidden sm:flex" : "flex"}`}>
+        <ThemeToggle />
         <YourAtButton
           userLocation={userLocation}
           getUserLocation={getUserLocation}
           setCenter={setCenter}
           setUserLocation={setUserLocation}
         />
-        <div
-          id="image search"
-          className=" cursor-pointer bg-[rgba(0,0,0,0.2)] top-[60px] shadow-md text-center left-0 flex justify-center items-center   w-[50px] z-[9999999] aspect-square rounded-full  "
-        >
-          <ImageDown className="absolute" cursor={"pointer"} size={30} />
-          <input
-            onChange={handleImageUpload}
-            type="file"
-            className="   w-full h-full opacity-0 cursor-pointer"
-            name="image"
-            id="image"
-            accept="image/*"
-          />
-        </div>
+        <ImageSearch handleImageUpload={handleImageUpload} />
       </div>
       <SearchForm
         showErrorDialog={showErrorDialog}
@@ -318,7 +326,7 @@ const Map = () => {
         userLocation={userLocation}
         setCenter={setCenter}
       />
-      <span className="z-0 absolute top-0 left-0">
+      <span className="map-shell absolute left-0 top-0 z-0">
         <MapContainer
           center={center}
           zoom={zoom}

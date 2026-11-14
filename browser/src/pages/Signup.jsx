@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookies";
 import { useNavigate } from "react-router-dom";
 import SideImage from "../components/SideImage/SideImage";
+import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
+import Brand from '../components/Brand/Brand';
 import api from "../api/api";
 const Signup = () => {
     const navigate=useNavigate()
@@ -33,21 +35,23 @@ const Signup = () => {
   }
 
   return (
-    <main className="min-h-screen w-full  bg-[#1C1D21] text-white grid place-content-center ">
+    <main className="min-h-screen w-full bg-sand-50 text-ink-900 dark:bg-ink-950 dark:text-ink-50">
 
-    <section className="flex justify-between  items-center  flex-col md:flex-row">
-    <article className="  mr-10 w-full grid min-h-screen sm:w-1/2 place-content-center gap-7  ">
-    <section id="signup" className="p-8 py-6 w-80 ">
-      <figure className="flex justify-start  flex-col  items-start gap-3 ">
-        <h1 className="text-5xl ">sign up</h1>
-        <p className="text-slate-500">set your account</p>
+    <section className="grid min-h-screen md:grid-cols-2">
+    <article className="relative flex min-h-screen w-full items-center justify-center px-6 py-24">
+    <Brand className="absolute left-6 top-6" />
+    <ThemeToggle className="absolute right-6 top-5" />
+    <section id="signup" className="w-full max-w-sm animate-fade-up">
+      <figure className="flex flex-col items-start gap-2">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">sign up</h1>
+        <p className="text-ink-500 dark:text-ink-300">set your account</p>
       </figure>
-      <form className="mt-4  gap-7 flex flex-col  justify-start items-start">
+      <form className="mt-8 stagger flex flex-col items-stretch gap-4">
         <input
           type="text"
           value={user.userName}
           onChange={handleFormInput}
-          className="bg-[#1C1D21] w-[100%] border-b-2 py-2 border-slate-600  focus:outline-none focus:pb-4 "
+          className="field"
           placeholder="user name"
           name="userName"
         />
@@ -55,7 +59,7 @@ const Signup = () => {
           type="email"
           value={user.email}
           onChange={handleFormInput}
-          className="bg-[#1C1D21] w-[100%] border-b-2 py-2 border-slate-600  focus:outline-none focus:pb-4 "
+          className="field"
           placeholder="email"
           name="email"
         />
@@ -63,35 +67,34 @@ const Signup = () => {
           type="password"
           value={user.password}
           onChange={handleFormInput}
-          className="bg-[#1C1D21] w-full border-b-2 py-2 border-slate-600  focus:outline-none focus:pb-4 "
+          className="field"
           placeholder="password"
           name="password"
         />
         <button
           onClick={handleSignup}
-          className="m-auto text-lg w-full py-3 hover:bg-[#ac89e5] rounded-3xl bg-[#9C6FE4]"
+          className="btn-primary mt-2"
         >
           sign up
         </button>
         {error.message ? (
-          <p className="text-red-600 text-center">{error.message}</p>
+          <p className="w-full rounded-xl border border-star-500/20 bg-star-500/10 px-4 py-2.5 text-center text-sm font-medium text-star-600 dark:text-star-400">{error.message}</p>
         ) : null}
       </form>
-      <aside className=" flex justify-around pt-10 items-center">
-        <p className="text-slate-400">already have an account?</p>
+      <aside className="mt-10 flex items-center justify-between gap-4 border-t border-sand-200 pt-6 dark:border-ink-700">
+        <p className="text-sm text-ink-500 dark:text-ink-300">already have an account?</p>
         <button
           onClick={() => navigate('/login')}
-          className="bg-[#333437] rounded-md p-2 hover:bg-[#555659]"
+          className="btn-secondary"
         >
           log in
         </button>
       </aside>
     </section>
-    </article>
-      <SideImage/>
-        </section>
-        </main>
-  );
-};
+  </article>
+    <SideImage/>
+  </section>
+  </main> )
+}
 
 export default Signup;

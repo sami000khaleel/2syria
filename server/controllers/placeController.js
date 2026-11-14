@@ -1,63 +1,63 @@
 const Place = require("../models/placeModel.js");
 const path = require("path");
-const fs = require('fs');
-const multer = require("multer");
 const auth=require('../middleware/authentication.js')
 const axios = require("axios");
 const placeMiddleware = require("../middleware/placeMiddleware.js");
+const r2 = require("../utils/r2.js");
 class placeController {
   constructor() {}
 
   static async searchByImage(req, res) {
     try {
-      
-      const uploadDir = path.join(__dirname, "..", "uploads");
+      // Keep the upload in memory only — nothing is written to disk.
+      // It is forwarded straight to the AI service.
+      try {
+        await placeMiddleware.receiveImageInMemory(req, res);
+      } catch (err) {
+        return res
+          .status(400)
+          .json({ success: false, message: err.message || "could not read the image" });
+      }
+      if (!req.file?.buffer?.length)
+        return res.status(400).json({ message: "file was no sent", success: false });
 
-      // Check if the uploads directory exists, create it if it doesn't
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+      let similarities;
+      try {
+        similarities = await placeMiddleware.sendImage(req.file);
+      } catch (err) {
+        if (err.aiUnavailable) {
+          console.log("AI service unavailable:", err.message);
+          return res.status(503).json({
+            success: false,
+            message: "the AI image search service is not available right now, please try again later",
+          });
+        }
+        if (err.aiRejected)
+          return res.status(400).json({ success: false, message: err.message });
+        throw err;
       }
 
-      const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, uploadDir); // Destination folder for uploaded files
-        },
-        filename: function (req, file, cb) {
-          cb(null, Date.now() + path.extname(file.originalname)); // Rename files to avoid collisions
-        },
-      });
+      if (!similarities?.length)
+        return res
+          .status(404)
+          .json({ success: false, message: "no similar places were found for this image" });
 
-      const upload = multer({ storage }).single("file");
-
-      upload(req, res, async (err) => {
-        if (err) {
-          console.error("Error uploading file:", err.message);
-          throw new Error('error handling the image')
+      const results = await placeMiddleware.matchPlacesByImagesNames(similarities);
+      const uniqueResults = {};
+      const finalResult = results.filter((place) => {
+        if (!uniqueResults[place._id]) {
+          uniqueResults[place._id] = { ...place };
+          return true;
         }
-          if(!req?.file?.path)
-              return res.status(400).json({message:'file was no sent',success:false})
-        // File is uploaded, you can access it via req.file
-        const filePath = req.file.path;
-        console.log("File saved at:", filePath);
-        let similarities = await placeMiddleware.sendImage(filePath, res);
-        if(!similarities?.length)
-          return res.status(500).json({success:false,message:'no similarities were found'})
-
-        const results = await placeMiddleware.matchPlacesByImagesNames(similarities);
-        console.log(results.length);
-        const uniqueResults = {};
-        const finalResult = results.filter((place) => {
-          if (!uniqueResults[place._id]) {
-            uniqueResults[place._id] = { ...place };
-            return true;
-          }
-        });
-        console.log(finalResult.length);
-        return res.status(200).json({ success: true, places: finalResult });
-      })}
-       catch (err) {
+      });
+      if (!finalResult.length)
+        return res
+          .status(404)
+          .json({ success: false, message: "no similar places were found for this image" });
+      return res.status(200).json({ success: true, places: finalResult });
+    } catch (err) {
       console.log(err.message);
-      return res.status(500).json({ success: false, message: err.message });
+      return res.status(500).json({ success: false, message: "internal server error" });
     }
   }
   static async getReviews(req, res) {
@@ -87,17 +87,47 @@ class placeController {
   static async getImage(req, res) {
     try {
       const { photoReference, placeId } = req.query;
-      if (!photoReference || !placeId) throw new Error("params are messing");
-      const imagePath = path.join(
-        process.cwd(),
-        "data",
-        "images",
-        placeId,
-        `${photoReference}.jpg`
-      );
-      return res.sendFile(imagePath);
+      // only plain ids — never let "../" reach the file system or the bucket key
+      const safe = /^[A-Za-z0-9_-]+$/;
+      if (!safe.test(photoReference || "") || !safe.test(placeId || ""))
+        return res.status(400).json({ success: false, message: "invalid image params" });
+
+      // Production: the server reads the photo from the (private) R2 bucket
+      // and streams it to the browser. The browser never talks to R2.
+      if (r2.isConfigured()) {
+        let object;
+        try {
+          object = await r2.getObject(
+            `places/${placeId}/${photoReference}.jpg`,
+            req.get("If-None-Match")
+          );
+        } catch (err) {
+          if (err.status === 404)
+            return res.status(404).json({ success: false, message: "image not found" });
+          throw err;
+        }
+        res.set("Cache-Control", "public, max-age=604800"); // browser keeps it for 7 days
+        if (object.notModified) return res.status(304).end();
+        res.set("Content-Type", object.contentType || "image/jpeg");
+        if (object.contentLength) res.set("Content-Length", String(object.contentLength));
+        if (object.etag) res.set("ETag", object.etag);
+        if (object.lastModified) res.set("Last-Modified", new Date(object.lastModified).toUTCString());
+        object.body.on("error", (err) => {
+          console.log("R2 stream error:", err.message);
+          res.destroy(err);
+        });
+        return object.body.pipe(res);
+      }
+
+      // Local development: serve from data/images
+      const imagePath = path.join(__dirname, "..", "data", "images", placeId, `${photoReference}.jpg`);
+      return res.sendFile(imagePath, (err) => {
+        if (err && !res.headersSent)
+          res.status(404).json({ success: false, message: "image not found" });
+      });
     } catch (err) {
       console.log(err);
+      if (res.headersSent) return res.end();
       return res
         .status(500)
         .json({ message: "internal server error", success: false });

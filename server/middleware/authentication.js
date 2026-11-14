@@ -92,7 +92,7 @@ accountVerificationCode.checked=true
           };
       
           // Send the email
-          console.log(process.env.EMAIL,process.env.APP_PASSWORD)
+          // (removed: logged the email app password)
           const info = await transporter.sendMail(mailOptions);
           console.log('Email sent: ' + info.response);
       

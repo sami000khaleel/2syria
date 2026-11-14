@@ -1,0 +1,10 @@
+#image-slider:hover>*,
+#image-slider:focus-visible>*{
+    animation: squich 220ms ease-in-out;
+}
+@keyframes squich {
+    50%{
+        scale: 1.15 0.9;
+    }
+    
+}
