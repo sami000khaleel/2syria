@@ -25,6 +25,8 @@ const userSchema=new mongoose.Schema({
         }
     }]
     ,
+    // the only activity we store: when the user last logged in
+    lastLoginAt:{type:Date},
     placesReviewed:[{date:{type:Date,default:Date.now()},place:{type:mongoose.SchemaTypes.ObjectId,ref:'Place'},}]
 })
 module.exports=mongoose.model('User',userSchema)

@@ -226,5 +226,16 @@ accountVerificationCode.checked=true
           res.status(500).json({ message: 'Failed to generate token',success:false });
         }
       }
+
+    // Saves the login date (and nothing else). Never blocks the login if it fails.
+    static async recordLogin(req, res, next) {
+      try {
+        const { user } = req.scope;
+        if (user?._id) await User.updateOne({ _id: user._id }, { $set: { lastLoginAt: new Date() } });
+      } catch (err) {
+        console.log("could not record login date:", err.message);
+      }
+      next();
+    }
 }
 module.exports=authenticationMiddleware

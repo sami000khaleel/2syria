@@ -1,4 +1,5 @@
 const User=require('../models/userModel.js')
+const { SEED_EMAIL, demoEnabled } = require('../utils/demo.js')
 const axios = require('axios');
 class userMiddleware{
     constructor(){
@@ -77,5 +78,41 @@ class userMiddleware{
         }
       }
 
+
+  // A few fake (seeded) accounts people can try without signing up
+  static async listDemoAccounts(req, res) {
+    try {
+      if (!demoEnabled()) return res.json({ success: true, accounts: [] });
+      const users = await User.find({ email: SEED_EMAIL }, { userName: 1, placesReviewed: 1 })
+        .sort({ userName: 1 })
+        .limit(40)
+        .lean();
+      // show 6, different each time
+      const accounts = users
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 6)
+        .map((u) => ({ userName: u.userName, reviews: (u.placesReviewed || []).length }));
+      return res.json({ success: true, accounts });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).json({ success: false, message: "could not load demo accounts" });
+    }
+  }
+  // Logs in as a fake account — only accounts created by the seed script are allowed
+  static async findDemoUser(req, res, next) {
+    try {
+      if (!demoEnabled())
+        return res.status(403).json({ success: false, message: "demo accounts are turned off" });
+      const userName = String(req.body?.userName || "");
+      const user = await User.findOne({ userName, email: SEED_EMAIL });
+      if (!user) return res.status(404).json({ success: false, message: "demo account not found" });
+      req.scope = { user };
+      next();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).json({ success: false, message: "could not log in with the demo account" });
+    }
+  }
 }
+
 module.exports=userMiddleware

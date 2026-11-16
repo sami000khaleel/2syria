@@ -39,8 +39,7 @@ const MAX = Math.max(MIN, parseInt(arg("max", "12"), 10));
 const PASSWORD = arg("password", process.env.SEED_PASSWORD || "Syria2026!");
 const DRY = has("dry");
 const CLEAN = has("clean");
-const SEED_DOMAIN = "seed.2syria.test";
-const FAKE_EMAIL = new RegExp(`@${SEED_DOMAIN.replace(/\./g, "\\.")}$`, "i");
+const { SEED_DOMAIN, SEED_EMAIL: FAKE_EMAIL } = require("../utils/demo");
 
 // deterministic random so repeated runs look consistent
 let _s = parseInt(arg("seed", "2026"), 10) || 2026;

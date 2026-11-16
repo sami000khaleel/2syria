@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+// fail fast instead of hanging 10 s when the DB is down (must be set before the models load)
+mongoose.set('bufferCommands', false)
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
@@ -16,15 +18,27 @@ const clientDist = process.env.CLIENT_DIST
 
 async function run(){
   const port=process.env.PORT||3000
+  // ---- database: connect in the background and keep retrying ----
   const mongoUrl = getMongoUrl()
-await  mongoose.connect(mongoUrl, {
-    useNewUrlParser: true,
-    family:4,
-    useUnifiedTopology: true,
-  }).then(async()=>{
-    console.log(`connected to database ${safeMongoUrl(mongoUrl)}`)
+  let retryMs = 5000
+  async function connectDb() {
+    try {
+      await mongoose.connect(mongoUrl, { family: 4, serverSelectionTimeoutMS: 15000 })
+      console.log(`connected to database ${safeMongoUrl(mongoUrl)}`)
+      retryMs = 5000
+    } catch (err) {
+      console.log(`database connection failed (${safeMongoUrl(mongoUrl)}): ${err.message}`)
+      if (/localhost|127\.0\.0\.1/.test(mongoUrl) && process.env.RENDER)
+        console.log('hint: on Render there is no local MongoDB — set DATABASE_URL to your MongoDB Atlas connection string')
+      else if (/mongodb\+srv|mongodb\.net/.test(mongoUrl))
+        console.log('hint: in MongoDB Atlas > Network Access, allow 0.0.0.0/0 (Render has no fixed IP), and check the user/password in DATABASE_URL')
+      console.log(`retrying in ${retryMs / 1000}s...`)
+      setTimeout(connectDb, retryMs)
+      retryMs = Math.min(retryMs * 2, 60000)
+    }
   }
-  ).catch((err)=>console.log(err))
+  mongoose.connection.on('disconnected', () => console.log('database disconnected'))
+  connectDb()
 
   app.set('trust proxy', 1) // behind Render's proxy
   app.use(cors({
@@ -33,7 +47,14 @@ await  mongoose.connect(mongoUrl, {
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-app.get('/api/health', (req, res) => res.json({ success: true, status: 'ok' }))
+const dbReady = () => mongoose.connection.readyState === 1
+app.get('/api/health', (req, res) =>
+  res.status(dbReady() ? 200 : 503).json({ success: dbReady(), status: dbReady() ? 'ok' : 'database not connected' }))
+// any API call while the database is down gets a quick, clear answer
+app.use('/api', (req, res, next) => {
+  if (dbReady()) return next()
+  return res.status(503).json({ success: false, message: 'the service is starting up or the database is unavailable, please try again in a moment' })
+})
 app.use('/api/user',userRouter)
 app.use('/api/place',placeRouter)
 // unknown API routes -> JSON 404 (never the React page)
