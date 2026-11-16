@@ -7,7 +7,9 @@
     "start": "node index.js",
     "dev": "npx nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "upload-images": "node tools/upload-images-r2.js"
+    "upload-images": "node tools/upload-images-r2.js",
+    "seed": "node tools/seed-fake-data.js",
+    "seed:clean": "node tools/seed-fake-data.js --clean"
   },
   "author": "sami khalil",
   "license": "ISC",
@@ -35,6 +37,6 @@
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=18"
+  "node": "22.x"
   }
 }
