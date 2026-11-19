@@ -10,6 +10,7 @@ import {
   Pane,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { placeIcon, userIcon } from "../components/MapIcons/mapIcons";
 import api from "../api/api";
 import Loading from "../components/Loading/Loading";
 import Nearby from "../components/svgs/Nearby";
@@ -184,7 +185,7 @@ const Map = () => {
             center={userLocation}
             radius={100}
           />
-          <Marker position={userLocation}>
+          <Marker position={userLocation} icon={userIcon} zIndexOffset={-100}>
             <Popup>You are here</Popup>
           </Marker>
         </>
@@ -215,6 +216,8 @@ const Map = () => {
               click: () => selectPlace(i, place),
             }}
             position={[place.location.lat, place.location.lng]}
+            icon={placeIcon(slideFlage && i === placeIndex)}
+            zIndexOffset={slideFlage && i === placeIndex ? 1000 : 0}
           >
             <Circle
               pathOptions={{ color: "#CE1126", fillOpacity: 0.15, weight: 2 }}

@@ -1,252 +1,95 @@
-# 🇸🇾 2Syria — AI-Powered Tourism App
+<div align="center">
 
-> Discover Syria through the lens of AI. Upload a photo, get instant matches from a curated database of historical and cultural landmarks — complete with maps, reviews, and community ratings.
+# 2Syria
 
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://react.dev)
-[![Vite](https://img.shields.io/badge/Vite-4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![Node.js](https://img.shields.io/badge/Node.js-Express-339933?logo=node.js&logoColor=white)](https://expressjs.com)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
-[![Flask](https://img.shields.io/badge/Flask-AI%20Service-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com)
+**Discover places across Syria on a map: search, filter, read reviews, or find a place from a single photo.**
 
-📹 **[Demo Video](#)**
+[**Live demo**](https://twosyria.onrender.com) · [Demo video (MP4)](docs/2syria-demo.mp4) · [Development guide](DEVELOPMENT.md)
 
----
+<img src="docs/2syria-demo.gif" alt="2Syria demo: searching and filtering places, the place panel with reviews, search by photo, light and dark mode" width="100%">
 
-## 📖 Overview
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)
+![Python](https://img.shields.io/badge/Python-Flask-3776AB?logo=python&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-ResNet50-FF6F00?logo=tensorflow&logoColor=white)
+![Cloudflare R2](https://img.shields.io/badge/Cloudflare-R2-F38020?logo=cloudflare&logoColor=white)
 
-**2Syria** is a full-stack, three-tier web application that helps travelers explore Syria using **image-based search powered by computer vision**.
+</div>
 
-Users can upload a photo of a place (a mosque, a citadel, a street), and the system returns visually similar landmarks from a curated database — along with their location on an interactive map, user reviews, and average ratings.
+> **Try it in one click:** the login page has demo accounts, so you don't need to sign up.
+> The app is on a free server, so the first visit can take up to a minute to wake it up.
 
-The project is split into **three independent services**:
+## What it does
 
-| Service | Purpose | Repo |
-|---------|---------|------|
-| 🌐 **Frontend** | React + Vite single-page app with Leaflet map | *(this repo)* |
-| 🔧 **Backend** | Node.js / Express REST API + MongoDB | *(this repo)* |
-| 🧠 **AI Service** | Flask image-similarity engine | [2syria-flask-server](https://github.com/sami000khaleel/2syria-flask-server) |
+- **Map search**: 661 places in 13 cities. Search by name, or filter by city, type and distance from you.
+- **Search by photo**: upload a photo or pick one from the gallery, and an AI model finds the places that look like it.
+- **Reviews and ratings**: photo slider, star ratings and visitor reviews for every place.
+- **Accounts**: sign-up, login, password recovery by email, and demo accounts for visitors.
+- **Light and dark mode**, with a responsive layout for phones and desktops.
 
----
+## Architecture
 
-## ✨ Features
-
-### 🔍 Image-Based Place Search
-Upload any photo and get matched to landmarks in the database using a CLIP-style image similarity model. Results are ranked by probability and displayed on the map.
-
-### 🗺 Interactive Map (Leaflet + OpenStreetMap)
-- Auto-centers on user's location (via IP geolocation with permission)
-- Displays matched places as markers
-- Custom slide-out panel with photos, description, and reviews
-- Adjustable search radius (km / mi)
-
-### 🏛 Rich Place Data
-- Multiple photos per place
-- Average rating + individual reviews
-- Type-based filtering (historical, restaurant, great view, religious, old ruins, hotel)
-- City-based filtering (Damascus, Aleppo, Homs, Palmyra, …)
-
-### ⭐ Reviews & Ratings
-- Star-based rating (1–5) + written review
-- One review per user **per week** per place (enforced server-side)
-- Average rating recomputed automatically
-
-### 🔐 Authentication
-- Signup / login with **JWT**
-- Password hashing with **bcrypt**
-- **Password recovery via email** (Nodemailer + 6-digit verification code with 30-second throttle and 2-minute expiry)
-- **Google OAuth** integration (OpenID Connect)
-
----
-
-## 🏗 Architecture
-
-```
-┌───────────────────────────────────────────────────────────┐
-│                     React + Vite Frontend                 │
-│  • Leaflet map    • Auth pages    • Slide-out place panel │
-└──────────────┬──────────────────────────┬─────────────────┘
-               │                          │
-               │ REST (JSON / multipart)  │ Image upload
-               ▼                          ▼
-┌──────────────────────────┐  ┌────────────────────────────┐
-│   Express API (Node.js)  │  │   Flask AI Service         │
-│   • JWT auth             │  │   • Image embedding model  │
-│   • Mongo (Users/Places) │  │   • Cosine similarity      │
-│   • Reviews, filters     │  │   • Returns ranked matches │
-└──────────────┬───────────┘  └────────────────────────────┘
-               │
-               ▼
-        ┌──────────────┐
-        │   MongoDB    │
-        │  Users,      │
-        │  Places,     │
-        │  Reviews     │
-        └──────────────┘
+```mermaid
+flowchart LR
+    U(("User")) --> B["React app<br/>Leaflet map"]
+    B -->|"REST /api"| S["Node.js / Express<br/>API + serves the React build"]
+    S --> DB[("MongoDB Atlas<br/>places, users, reviews")]
+    S -->|"private, streamed"| R2[("Cloudflare R2<br/>3,900 photos")]
+    S -->|"photo + service JWT"| AI["Python / Flask<br/>AI similarity service"]
 ```
 
----
+## How search by photo works
 
-## 🛠 Tech Stack
-
-### Frontend
-- **React 18** + **Vite**
-- **React Router v6** for navigation
-- **Leaflet** + **react-leaflet** for interactive maps
-- **Tailwind CSS** for styling
-- **Axios** for HTTP
-- **lucide-react** for icons
-
-### Backend
-- **Node.js** + **Express 4**
-- **MongoDB** + **Mongoose 6**
-- **JWT** (`jsonwebtoken`) for auth
-- **bcryptjs** for password hashing
-- **Nodemailer** for recovery emails
-- **Multer** for image uploads
-- **Axios** to talk to the AI service
-- **google-auth-library** for OAuth
-
-### AI Service
-- **Flask** (Python)
-- **PyTorch / CLIP** for image embeddings
-- Cosine similarity search over indexed place photos
-
----
-
-## 📁 Project Structure
-
-### Backend (`/server`)
-
-```
-server/
-├── controllers/
-│   ├── placeController.js    # Search, reviews, images, radius filter
-│   └── userController.js     # Auth, password reset, OAuth, reviews
-├── middleware/
-│   ├── authentication.js     # JWT, bcrypt, email codes, OAuth
-│   ├── placeMiddleware.js    # Similarity search, distance, weekly limit
-│   └── userMiddleware.js     # Account creation, rating history
-├── models/
-│   ├── placeModel.js
-│   └── userModel.js
-├── routes/
-│   ├── placeRoutes.js
-│   └── userRoutes.js
-└── index.js
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant R as React app
+    participant E as Express API
+    participant F as Flask AI service
+    participant D as MongoDB
+    U->>R: Uploads or picks a photo
+    R->>E: POST /api/place/search-by-image
+    E->>F: Photo (kept in memory) + service token
+    F->>F: ResNet50 features, cosine similarity
+    F-->>E: Up to 20 similar photos, best first
+    E->>D: Find the places those photos belong to
+    E-->>R: Matching places
+    R-->>U: Shows them on the map
 ```
 
-### Frontend (`/browser`)
+## What I built
 
+- **A three-part system**: a React frontend, a Node.js/Express API and a Python/Flask AI service. The API and the AI service authenticate each other with JWT.
+- **Image similarity search**: a pre-trained ResNet50 model turns photos into feature vectors, which are compared with cosine similarity. The features of the place photos are cached, so each search only processes the new image.
+- **No temporary files**: uploaded photos travel from the browser to the AI service in memory, never written to disk.
+- **Private photo storage**: about 3,900 photos sit in a private Cloudflare R2 bucket. The API streams them to the browser with caching (ETag).
+- **One deployable service**: Express serves the built React app and the API together. It has a health check and reconnects to the database automatically, answering quickly with a 503 while the database is unavailable.
+- **Secure accounts**: bcrypt-hashed passwords, JWT sessions, and recovery codes that expire after 2 minutes and can only be requested every 30 seconds.
+- **Data tooling**: re-runnable scripts that import the places, upload photos to R2, check the bucket, and seed demo users and reviews.
+
+## Tech stack
+
+| | |
+| --- | --- |
+| **Frontend** | React 18, Vite, React Router, Tailwind CSS, Leaflet |
+| **Backend** | Node.js 22, Express, MongoDB / Mongoose, JWT, bcrypt, Multer, Nodemailer |
+| **AI** | Python, Flask, TensorFlow (ResNet50), scikit-learn |
+| **Cloud** | MongoDB Atlas, Cloudflare R2, Render |
+
+## Run it locally
+
+```bash
+git clone https://github.com/sami000khaleel/2syria.git
+cd 2syria
+cp server/example.env server/.env     # add your MongoDB connection and a JWT_SECRET
+npm run build && npm start            # open http://localhost:3000
 ```
-browser/
-└── src/
-    ├── api/
-    │   └── api.js            # Axios wrapper for all endpoints
-    ├── assets/
-    └── (pages: map, signup, login, recover, reset)
-```
 
----
+The [development guide](DEVELOPMENT.md) covers the full setup: loading the data, the AI service, environment variables, the API and deployment.
 
-## 🔌 API Overview
+## Contact
 
-### `/api/user`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/signup` | Register a new user |
-| `GET` | `/login` | Login (password via header) |
-| `GET` | `/send-account` | Fetch current user |
-| `GET` | `/validate-token` | Verify JWT |
-| `GET` | `/recover-account` | Request a 6-digit recovery code by email |
-| `POST` | `/recover-account` | Submit recovery code → returns token |
-| `PATCH` | `/reset-password` | Change password (auth required) |
-| `POST` | `/review-place` | Add a review to a place |
-| `GET` | `/get-reviews?placeId=…` | List reviews for a place |
-
-### `/api/place`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/search-by-image` | Upload image → similar places |
-| `GET` | `/search-places` | Filter by search / city / type / radius |
-| `GET` | `/fetch-places-nearby` | Places within radius of coordinates |
-| `GET` | `/image?photoReference=…&placeId=…` | Serve a place image |
-| `GET` | `/get-place-photo?photoReference=…` | Redirect to Google photo |
-
----
-
-## 🧠 How the Image Search Works
-
-1. The user uploads a photo via the frontend.
-2. The Express backend saves it temporarily and forwards it to the Flask AI service (`SIMILARITY_URL`).
-3. Flask computes an image embedding using a pretrained vision model and compares it against embeddings of all indexed place photos.
-4. It returns a list of `[photoReference, probability]` pairs.
-5. The backend maps each `photoReference` back to a `Place` document in MongoDB.
-6. Results are deduplicated, sorted by probability, and returned to the frontend.
-7. The frontend plots the matched places on the Leaflet map and opens the slide-out panel.
-
----
-
-## 📸 Screenshots
-
-### Home & Map View
-![Home and Map View](docs/screenshot-home.png)
-
-### Image Search Result
-![Image Search Result](docs/screenshot-search.png)
-
-### Place Details & Reviews
-![Place Details and Reviews](docs/screenshot-place.png)
-
-### Authentication
-![Signup and Login](docs/screenshot-auth.png)
-
----
-
-## 🗺 Roadmap
-
-- [ ] Offline mode with cached place data
-- [ ] Multi-language support (AR / EN / DE)
-- [ ] Itinerary planner (multi-day trips)
-- [ ] User-submitted places (moderated)
-- [ ] Reviews with photos
-- [ ] React Native mobile app
-- [ ] Dockerize all three services with `docker-compose`
-- [ ] TypeScript migration on the backend
-
----
-
-## 💡 What I Learned
-
-- **Three-service architecture** — decoupling AI from the API from the UI makes each part independently deployable and testable
-- **Multipart file uploads** across two services (React → Express → Flask)
-- **Image similarity search** at the application level, abstracting the ML model behind a REST endpoint
-- **Haversine distance** for location filtering without relying on external geospatial APIs
-- **Email verification flows** with throttle windows and expiry
-- **JWT + bcrypt + Google OAuth** in one auth system
-- **Handling cross-origin file paths** between backend and frontend
-
----
-
-## 👨‍💻 About Me
-
-I'm **Sami Khaleel**, a full-stack developer based in Germany, with a B.Eng in Computer Engineering.
-
-I built 2Syria to combine my love for my country's history with my interest in AI and modern web development. It's one of three major portfolio projects I've built while transitioning into professional software engineering in Germany.
-
-I'm currently looking for a **Junior Full-Stack Developer** role and I'm available immediately — already in Germany, no visa sponsorship needed.
-
-- 📧 Email: [sami000khaleel@gmail.com](mailto:sami000khaleel@gmail.com)
-- 🐙 GitHub: [@sami000khaleel](https://github.com/sami000khaleel)
-- 🧠 Codewars: [sami000khaleel](https://www.codewars.com/users/sami000khaleel)
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — feel free to learn from it, fork it, and build on it. Attribution is appreciated.
-
----
-
-⭐ **If you found this project interesting, a star is always appreciated — and if you're hiring junior developers, I'd love to hear from you!**
+**Sami Khalil**: [github.com/sami000khaleel](https://github.com/sami000khaleel)
