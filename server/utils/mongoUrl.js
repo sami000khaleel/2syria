@@ -8,11 +8,8 @@ function getMongoUrl() {
 
   // ---- online: MongoDB Atlas ----
   if (process.env.MONGO_CLUSTER) {
-    const user = encodeURIComponent(process.env.MONGO_INITDB_ROOT_USERNAME || '')
-    const pass = encodeURIComponent(process.env.MONGO_INITDB_ROOT_PASSWORD || '')
-    const cluster = process.env.MONGO_CLUSTER.replace(/^mongodb(\+srv)?:\/\//, '').replace(/\/+$/, '')
-    const db = process.env.MONGO_DB || '2syria'
-    return `mongodb+srv://${user}:${pass}@${cluster}/${db}?retryWrites=true&w=majority`
+  
+    return `mongodb+srv://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_CLUSTER}/${process.env.MONGO_INITDB_DATABASE}?retryWrites=true&w=majority`
   }
 
   // ---- local: Docker MongoDB ----
