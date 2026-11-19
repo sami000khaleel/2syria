@@ -20,6 +20,7 @@ async function run(){
   const port=process.env.PORT||3000
   // ---- database: connect in the background and keep retrying ----
   const mongoUrl = getMongoUrl()
+  console.log(mongoUrl)
   let retryMs = 5000
   async function connectDb() {
     try {
