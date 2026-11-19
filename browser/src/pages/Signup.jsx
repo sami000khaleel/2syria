@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import SideImage from "../components/SideImage/SideImage";
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import Brand from '../components/Brand/Brand';
+import PrivacyPolicy from '../components/Privacy/PrivacyPolicy';
 import api from "../api/api";
 const Signup = () => {
+  const [privacyOpen, setPrivacyOpen] = React.useState(false);
     const navigate=useNavigate()
   const [error, setError] = useState({ message: "", status: 0 });
   const [user, setUser] = useState({
@@ -81,6 +83,11 @@ const Signup = () => {
           <p className="w-full rounded-xl border border-star-500/20 bg-star-500/10 px-4 py-2.5 text-center text-sm font-medium text-star-600 dark:text-star-400">{error.message}</p>
         ) : null}
       </form>
+      <p className="mt-4 text-center text-xs text-ink-400">
+        by signing up you agree to our{" "}
+        <button type="button" onClick={() => setPrivacyOpen(true)} className="font-semibold text-brand-600 underline-offset-2 hover:underline dark:text-brand-300">privacy policy</button>
+      </p>
+      <PrivacyPolicy open={privacyOpen} onClose={() => setPrivacyOpen(false)} />
       <aside className="mt-10 flex items-center justify-between gap-4 border-t border-sand-200 pt-6 dark:border-ink-700">
         <p className="text-sm text-ink-500 dark:text-ink-300">already have an account?</p>
         <button

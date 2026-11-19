@@ -15,6 +15,7 @@ import {
   Link,
 } from "react-router-dom";
 import ResetPassword from "./pages/ResetPassword";
+import Privacy from "./pages/Privacy";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "/privacy", element: <Privacy /> },
   { path: "*", element: <PageNotFound/> },
 ]);
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LeftArrow from '../../assets/svgs/LeftArrow' 
 import RightArrow from "../../assets/svgs/RightArrow";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -6,6 +6,13 @@ import fallbackImage from "../../assets/syrianFlagNew.svg";
 import './imageSilder.css'
 const ImagesSlider = ({ imagesUrls }) => {
   const [imageIndex, setImageIndex] = useState(0);
+  // new place = new photos -> always start again from the first one
+  const imagesKey = imagesUrls.join("|");
+  useEffect(() => {
+    setImageIndex(0);
+  }, [imagesKey]);
+  // never point past the last photo (e.g. new place has fewer photos)
+  const currentIndex = Math.min(imageIndex, Math.max(imagesUrls.length - 1, 0));
   function showNextImage(e) {
     e.stopPropagation()
     e.preventDefault();
@@ -28,7 +35,7 @@ const ImagesSlider = ({ imagesUrls }) => {
         {imagesUrls.map(imageUrl => 
           <img
           style={{
-            translate:`${-100*imageIndex}%`
+            translate:`${-100*currentIndex}%`
           }}
           key={imageUrl}
             
@@ -73,7 +80,7 @@ const ImagesSlider = ({ imagesUrls }) => {
             e.preventDefault()
             e.stopPropagation()
             setImageIndex(index)
-          }} key={index}>{index===imageIndex?<span aria-hidden className="block h-2 w-5 rounded-full bg-white transition-all" />:<span aria-hidden className="block h-2 w-2 rounded-full bg-white/[.55] transition-all" />}</button>
+          }} key={index}>{index===currentIndex?<span aria-hidden className="block h-2 w-5 rounded-full bg-white transition-all" />:<span aria-hidden className="block h-2 w-2 rounded-full bg-white/[.55] transition-all" />}</button>
         ))}
       </div>
     </span>

@@ -466,3 +466,9 @@
 @keyframes fade-in {
   from { opacity: 0; }
 }
+
+/* normal sentence case for long text (the app capitalizes every word by default) */
+.no-caps,
+.no-caps * {
+  text-transform: none !important;
+}

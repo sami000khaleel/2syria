@@ -28,13 +28,7 @@ async function run(){
       retryMs = 5000
     } catch (err) {
       console.log(`database connection failed (${safeMongoUrl(mongoUrl)}): ${err.message}`)
-      if (/localhost|127\.0\.0\.1/.test(mongoUrl) && process.env.RENDER)
-        console.log('hint: on Render there is no local MongoDB — set DATABASE_URL to your MongoDB Atlas connection string')
-      else if (/mongodb\+srv|mongodb\.net/.test(mongoUrl))
-        console.log('hint: in MongoDB Atlas > Network Access, allow 0.0.0.0/0 (Render has no fixed IP), and check the user/password in DATABASE_URL')
-      console.log(`retrying in ${retryMs / 1000}s...`)
-      setTimeout(connectDb, retryMs)
-      retryMs = Math.min(retryMs * 2, 60000)
+      
     }
   }
   mongoose.connection.on('disconnected', () => console.log('database disconnected'))

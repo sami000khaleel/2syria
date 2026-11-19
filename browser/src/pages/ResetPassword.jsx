@@ -5,6 +5,7 @@ import api from "../api/api";
 import SideImage from "../components/SideImage/SideImage";
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import Brand from '../components/Brand/Brand';
+import Notice from '../components/Notice/Notice';
 
 import axios from "axios";
 const ResetPassword = () => {
@@ -12,17 +13,18 @@ const ResetPassword = () => {
   const [loadingFlag, setLoadingFlag] = useState(false);
   const [emailVerifiedFlag, setEmailVerifiedFlag] = useState(false);
   const [password, setPassword] = useState("");
+  const [notice, setNotice] = useState(null);
   async function handleResetPassword(){
     try {
         setLoadingFlag(true)
         await api.resetPassword(password)
         setLoadingFlag(false) 
-        window.alert('password has been changed successfully')
-        navigate('/map')
+        setNotice({ type: "success", text: "your password has been changed — taking you to the map…" })
+        setTimeout(() => navigate('/map'), 1400)
     } catch (err) {
         console.log(err)
         setLoadingFlag(false)
-        window.alert(err.response.data.message)
+        setNotice({ type: "error", text: err?.response?.data?.message || "could not change the password, please try again" })
 
     }
   }
@@ -45,11 +47,12 @@ const ResetPassword = () => {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setNotice(null); }}
                 className="field mt-8"
                 placeholder="new password"
                 name="password"
               />
+              <Notice notice={notice} className="mt-4" />
               <button
                 disabled={loadingFlag ? true : false}
                 onClick={handleResetPassword}

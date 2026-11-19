@@ -5,6 +5,7 @@ import Cookies from 'js-cookies'
 import SideImage from "../components/SideImage/SideImage";
 import ThemeToggle from '../components/ThemeToggle/ThemeToggle';
 import Brand from '../components/Brand/Brand';
+import Notice from '../components/Notice/Notice';
 
 const RecoverAccount = () => {
   const [loadingFlag,setLoadingFlag]=useState(false)
@@ -16,9 +17,11 @@ const RecoverAccount = () => {
     code: "",
   });
   const [gotCode, setGotCode] = useState(false);
+  const [notice, setNotice] = useState(null);
   const [error, setError] = useState({ message: "", status: 0 });
   function handleFormInput(e) {
     setError({ message: "" });
+    setNotice(null);
     setUser((pre) => ({ ...pre, [e.target.name]: e.target.value }));
   }
   console.log(error);
@@ -33,7 +36,7 @@ const RecoverAccount = () => {
       navigate('/reset-password')
     } catch (error) {
       setLoadingFlag(false)
-      window.alert(error.message);
+      setNotice({ type: "error", text: error?.response?.data?.message || error?.message || "something went wrong, please try again" });
     }
   }
   async function handleRequestCode() {
@@ -41,13 +44,13 @@ const RecoverAccount = () => {
       setLoadingFlag(true)
       await api.get_code(user.email);
       setLoadingFlag(false)
-      window.alert("code was successfully sent  to " + user.email);
+      setNotice({ type: "success", text: "we sent a code to " + user.email + " — check your inbox (and spam folder)." });
       setEmailVerifiedFlag(true)
     } catch (error) {
       setEmailVerifiedFlag(false)
       setLoadingFlag(false)
       setError({ message: error.message });
-      window.alert(error);
+      setNotice({ type: "error", text: error?.response?.data?.message || error?.message || "something went wrong, please try again" });
     }
   }
 
@@ -75,6 +78,7 @@ const RecoverAccount = () => {
                   placeholder="email"
                   name="email"
                 />
+                <Notice notice={notice} className="mt-4" />
                 <button
                 disabled={loadingFlag?true:false}
                   onClick={handleRequestCode}
@@ -101,6 +105,7 @@ const RecoverAccount = () => {
                   placeholder="code"
                   name="code"
                 />
+                <Notice notice={notice} className="mt-4" />
                 <button
                   onClick={handle_submit_code}
                   className="btn-primary mt-6"

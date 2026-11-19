@@ -360,16 +360,25 @@ async function seed() {
   console.log("Done.");
   console.log(`Log in as any fake user, e.g. "${users[0].userName}" with password "${PASSWORD}"`);
 }
-
 (async () => {
   const url = getMongoUrl();
+  const source = process.env.DATABASE_URL ? "DATABASE_URL"
+    : process.env.MONGO_CLUSTER ? "MONGO_CLUSTER (Atlas)"
+    : "MONGO_HOST (local Docker)";
+  console.log(`Using ${source}: ${safeMongoUrl(url)}`);
   try {
-    await mongoose.connect(url, { family: 4 });
-    console.log(`Connected to ${safeMongoUrl(url)}${DRY ? "  (dry run)" : ""}`);
+    await mongoose.connect(url, { family: 4, serverSelectionTimeoutMS: 15000 });
+    console.log(`Connected to db "${mongoose.connection.name}"${DRY ? "  (dry run)" : ""}`);
     if (CLEAN) await clean();
     else await seed();
   } catch (err) {
     console.error("Seeding failed:", err.message);
+    if (/bad auth|authentication failed/i.test(err.message))
+      console.error("→ username/password don't match the Atlas database user (Atlas → Database Access)");
+    else if (/ENOTFOUND|querySrv/i.test(err.message))
+      console.error("→ cluster hostname is wrong (copy it from Atlas → Connect → Drivers)");
+    else if (/timed out|Server selection/i.test(err.message))
+      console.error("→ your IP isn't allowed (Atlas → Network Access → add your IP or 0.0.0.0/0)");
     process.exitCode = 1;
   } finally {
     await mongoose.disconnect();

@@ -1,9 +1,21 @@
-// Mongo connection string, shared by the server and the tools:
-// 1. DATABASE_URL if set (e.g. MongoDB Atlas on Render)
-// 2. otherwise built from the MONGO_* variables (local / Docker MongoDB)
+// Mongo connection string, shared by the server and the tools.
+// Checked in this order:
+// 1. DATABASE_URL  - a full connection string (optional)
+// 2. MONGO_CLUSTER - MongoDB Atlas (online), built from separate variables
+// 3. MONGO_HOST    - local / Docker MongoDB
 function getMongoUrl() {
   if (process.env.DATABASE_URL) return process.env.DATABASE_URL
 
+  // ---- online: MongoDB Atlas ----
+  if (process.env.MONGO_CLUSTER) {
+    const user = encodeURIComponent(process.env.MONGO_INITDB_ROOT_USERNAME || '')
+    const pass = encodeURIComponent(process.env.MONGO_INITDB_ROOT_PASSWORD || '')
+    const cluster = process.env.MONGO_CLUSTER.replace(/^mongodb(\+srv)?:\/\//, '').replace(/\/+$/, '')
+    const db = process.env.MONGO_DB || '2syria'
+    return `mongodb+srv://${user}:${pass}@${cluster}/${db}?retryWrites=true&w=majority`
+  }W
+
+  // ---- local: Docker MongoDB ----
   const user = process.env.MONGO_INITDB_ROOT_USERNAME
   const pass = process.env.MONGO_INITDB_ROOT_PASSWORD
   const db = process.env.MONGO_INITDB_DATABASE || '2syria'

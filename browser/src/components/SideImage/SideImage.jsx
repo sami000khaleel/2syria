@@ -1,5 +1,5 @@
 import React from 'react'
-import { SyrianFlag } from '../Brand/Brand'
+import { LogoMark } from '../Brand/Brand'
 import vector0 from '../../assets/Vector.png'
 import vector1 from '../../assets/Vector (1).png'
 import vector2 from '../../assets/Vector (2).png'
@@ -67,7 +67,7 @@ const SideImage = () => {
                 />
               </div>
               <figcaption className="stagger flex flex-col items-center gap-3 text-center text-white">
-                <SyrianFlag className="h-10 w-[60px] rounded-md shadow-lg ring-1 ring-white/30" />
+                <LogoMark className="h-14 w-14 drop-shadow-lg" />
                 <p className="text-3xl font-extrabold tracking-tight">discover syria</p>
                 <p className="max-w-xs text-sm text-white/75">search places, read reviews and find your way — even from a single photo.</p>
               </figcaption>

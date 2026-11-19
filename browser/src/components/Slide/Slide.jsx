@@ -150,7 +150,7 @@ const Slide = ({
       .filter((photo) => photo?.photo_reference)
       .map((photo) => api.imageUrl(place.place_id, photo.photo_reference));
     setImages(imagesUrl);
-  }, [place?._id]);
+  }, [place?._id ?? place?.place_id]);
   // Function to render star icons based on the rating
   const renderStars = (rating) => {
     const stars = [];
@@ -287,9 +287,9 @@ const Slide = ({
               alt={place ? place.name : "place"}
             />{" "}
             {images.length?<Arrows scrollLeft={scrollImgLeft} scrollRight={scrollImgRight} />:null} */}
-            <ImagesSlider key={place._id} imagesUrls={images.length?images:[SyrianFlage]} />
+            <ImagesSlider key={place._id ?? place.place_id} imagesUrls={images.length?images:[SyrianFlage]} />
           </div>
-          <div key={place._id} className="stagger relative flex min-h-0 flex-1 flex-col px-5 pt-5">
+          <div key={place._id ?? place.place_id} className="stagger relative flex min-h-0 flex-1 flex-col px-5 pt-5">
             <h1
               className={`text-ink-900 dark:text-white ${
                 place.name.length > 28 ? "text-2xl" : "text-3xl"

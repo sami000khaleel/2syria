@@ -21,6 +21,7 @@ import SearchForm from "../components/SearchForm/SearchForm";
 import Cookies from "js-cookies";
 import { useNavigate, useRouteLoaderData } from "react-router-dom";
 import YourAtButton from "../components/svgs/YourAtButton";
+import LocationPrompt from "../components/LocationPrompt/LocationPrompt";
 const Map = () => {
   const [loadingFlag, settLoadingFlag] = useState(false);
   const [timeoutId, setTimeoutId] = useState(null);
@@ -72,11 +73,10 @@ const Map = () => {
       }
     }
   }
-  async function getUserLocation() {
+  async function getUserLocation(options = {}) {
     if (userLocation.length) return userLocation;
     async function getCoordinates() {
       try {
-        Cookies.setItem("userConfirmation", true);
         console.log("started calling");
         let location = await api.getUserLocation();
         setUserLocation(location);
@@ -91,24 +91,35 @@ const Map = () => {
         return [];
       }
     }
-    if (!Cookies.getItem("userConfirmation")) {
-      const result = window.confirm(
-        "give us permission to access your location"
-      );
-      if (result) {
-        let res = await getCoordinates();
-        return res;
-      } else {
-        // User clicked Cancel
-        console.log("User clicked Cancel");
-        return [];
-      }
-    }
-    let res = await getCoordinates();
-    return res;
+    // remembered answer: "yes" / "no" (kept for a year)
+    const choice = Cookies.getItem("userConfirmation");
+    if (choice === "yes") return await getCoordinates();
+    // on page load, respect an earlier "not now"; a click on the locate button asks again
+    if (choice === "no" && options.auto) return [];
+    const allowed = await askLocationPermission();
+    Cookies.setItem("userConfirmation", allowed ? "yes" : "no", 60 * 60 * 24 * 365, "/");
+    if (!allowed) return [];
+    return await getCoordinates();
+  }
+  // in-app permission card instead of window.confirm
+  const [locationPromptOpen, setLocationPromptOpen] = useState(false);
+  const locationAnswer = useRef(null);
+  function askLocationPermission() {
+    if (locationAnswer.current) return locationAnswer.current.promise; // already asking
+    let resolve;
+    const promise = new Promise((r) => (resolve = r));
+    locationAnswer.current = { promise, resolve };
+    setLocationPromptOpen(true);
+    return promise;
+  }
+  function answerLocation(allowed) {
+    setLocationPromptOpen(false);
+    const pending = locationAnswer.current;
+    locationAnswer.current = null;
+    if (pending) pending.resolve(allowed);
   }
   useEffect(() => {
-    getUserLocation();
+    getUserLocation({ auto: true });
   }, []);
   function selectPlace(index, place) {
     console.log(place);
@@ -297,6 +308,11 @@ const Map = () => {
         </dialog>
       }
       {loadingFlag ? <Loading /> : null}
+      <LocationPrompt
+        open={locationPromptOpen}
+        onAllow={() => answerLocation(true)}
+        onDeny={() => answerLocation(false)}
+      />
       {slideFlage && (
         <Slide
           showErrorDialog={showErrorDialog}

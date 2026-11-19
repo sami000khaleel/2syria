@@ -9,6 +9,6 @@
     "dev:client": "npm run dev --prefix browser"
   },
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   }
 }

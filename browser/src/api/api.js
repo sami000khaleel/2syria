@@ -89,6 +89,16 @@ export default class api {
     return response;
   }
 
+  // fake accounts created by the server's seed script, for trying the app without signing up
+  static async getDemoAccounts() {
+    const { data } = await axios.get(`${api.url}/user/demo-accounts`);
+    return data.accounts || [];
+  }
+
+  static async demoLogin(userName) {
+    return await axios.post(`${api.url}/user/demo-login`, { userName });
+  }
+
   static async validateToken(token) {
     return await axios.get(`${api.url}/user/validate-token`, {
       headers: {
