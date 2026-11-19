@@ -13,7 +13,7 @@ function getMongoUrl() {
     const cluster = process.env.MONGO_CLUSTER.replace(/^mongodb(\+srv)?:\/\//, '').replace(/\/+$/, '')
     const db = process.env.MONGO_DB || '2syria'
     return `mongodb+srv://${user}:${pass}@${cluster}/${db}?retryWrites=true&w=majority`
-  }W
+  }
 
   // ---- local: Docker MongoDB ----
   const user = process.env.MONGO_INITDB_ROOT_USERNAME
