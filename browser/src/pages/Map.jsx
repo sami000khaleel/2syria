@@ -42,7 +42,7 @@ const Map = () => {
   const dialogRef = useRef("");
   // handling review Model
   useEffect(
-    () => (Cookies.getItem("token") ? () => null : navigate("/signup")),
+    () => (Cookies.getItem("token") ? () => null : navigate("/login")),
     []
   );
   // hanling error
@@ -230,12 +230,12 @@ const Map = () => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        if (!Cookies.getItem("token")) return navigate("/signup");
+        if (!Cookies.getItem("token")) return navigate("/login");
         const data = await api.getUser(Cookies.getItem("token"));
         setUser(data.user);
       } catch (error) {
         Cookies.removeItem("token");
-        navigate("/signup");
+        navigate("/login");
       }
     }
     fetchUser();

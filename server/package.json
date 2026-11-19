@@ -10,7 +10,8 @@
     "upload-images": "node tools/upload-images-r2.js",
     "seed": "node tools/seed-fake-data.js",
     "check-r2": "node tools/check-r2.js",
-    "seed:clean": "node tools/seed-fake-data.js --clean"
+    "seed:clean": "node tools/seed-fake-data.js --clean",
+    "clean-places":"node tools/clean-places-json.js"
   ,
   "import-places": "node tools/import-places.js"
   },

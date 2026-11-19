@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npm install --prefix browser --include=dev && npm run build --prefix browser && npm install --prefix server --omit=dev",
     "start": "npm start --prefix server",
+    
     "dev:server": "npm run dev --prefix server",
     "dev:client": "npm run dev --prefix browser"
   },
